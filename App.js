@@ -69,14 +69,18 @@ export default function App() {
         onChangeText={(e) => setValue(e)}
       />
       <Button color='green' title='agregar' onPress={handleSubmitNames} />
-      <View style={{ marginVertical: 4 }}>
-        <Button
-          color='red'
-          title='eliminar todos'
-          style
-          onPress={() => setNames([])}
-        />
-      </View>
+      {names.length ? (
+        <View style={{ marginVertical: 4 }}>
+          <Button
+            color='red'
+            title='eliminar todos'
+            style
+            onPress={() => setNames([])}
+          />
+        </View>
+      ) : (
+        <Text />
+      )}
       <StatusBar style='auto' />
       <View>
         {names.length ? (
