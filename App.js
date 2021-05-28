@@ -13,6 +13,8 @@ import {
 export default function App() {
   const [value, setValue] = React.useState('');
   const [names, setNames] = React.useState([]);
+  const [isEdit, setIsEdit] = React.useState(false);
+  const [nameToEdit, setNameToEdit] = React.useState('');
   const handleSubmitNames = () => {
     if (value.trim === '' || !value) {
       alert('Debes ingregar un nombre');
@@ -22,21 +24,36 @@ export default function App() {
     if (isRepeted) {
       return alert('No pudes escribir dos nombres iguales');
     }
-    setNames((prev) => [...prev, value]);
-    setValue('');
+    if (!isEdit) {
+      setNames((prev) => [...prev, value]);
+      setValue('');
+    } else {
+      names.splice(names.indexOf(nameToEdit), 1, value);
+      setValue('');
+      setIsEdit(false);
+      setNameToEdit('');
+    }
   };
   const deleteName = (nameToDelete) => {
     const newNames = names.filter((name) => name !== nameToDelete);
     setNames(newNames);
   };
-  const handleDelete = (nameToDelete) => {
+  const handleAction = (nameToDelete) => {
     Alert.alert(
-      `¿Estás seguro en eliminar este nombre: ${nameToDelete}?`,
-      'Despúes de eliminar no se podra recuperar',
+      `Has seleccionado el nombre ${nameToDelete}`,
+      'Selecciona la operación a ejecutar',
       [
         {
           text: 'Cancelar',
           style: 'cancel',
+        },
+        {
+          text: 'Editar',
+          onPress: () => {
+            setValue(nameToDelete);
+            setIsEdit(true);
+            setNameToEdit(nameToDelete);
+          },
         },
         { text: 'Eliminar', onPress: () => deleteName(nameToDelete) },
       ]
@@ -65,7 +82,7 @@ export default function App() {
         {names.length ? (
           names.map((name) => {
             return (
-              <TouchableOpacity key={name} onPress={() => handleDelete(name)}>
+              <TouchableOpacity key={name} onPress={() => handleAction(name)}>
                 <Text style={styles.listNames}>{name}</Text>
               </TouchableOpacity>
             );
